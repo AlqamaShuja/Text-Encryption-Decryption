@@ -109,5 +109,7 @@ function textDecryption() {
     vigenere_cipher_decryption();
   } else if (cipher_method == "substitution_cipher") {
     substitute_decryption();
+  } else if (cipher_method == "playFair_method") {
+    playFair_decryption();
   }
 }

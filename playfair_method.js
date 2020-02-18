@@ -59,6 +59,7 @@ function create_PF_plainText() {
 }
 
 function playFair_Encryption() {
+  encryptedText = "";
   removeCharacter();
   createMatrix();
   create_PF_plainText();
@@ -135,8 +136,91 @@ function playFair_Encryption() {
   showEncryptedTextInBrowser();
 }
 
-// function playFair_Decryption() {
+function playFair_decryption() {
+  decryptedText = "";
+  for (let i = 0; i < encryptedText.length; ) {
+    if (text.charCodeAt(i) == 32) {
+      decryptedText += String.fromCharCode(32);
+      i++;
+    } else {
+      let temp1, temp2, temp1_r, temp2_r, temp1_c, temp2_c;
 
-// }
+      if (encryptedText[i] != (null || undefined)) {
+        temp1 = encryptedText[i];
+        temp2 = encryptedText[i + 1];
+      } else {
+        return;
+      }
 
-// playFair_Encryption();
+      for (let k = 0; k < 5; k++) {
+        for (let j = 0; j < 5; j++) {
+          if (matrix[k][j] == temp1) {
+            temp1_r = k;
+            temp1_c = j;
+          }
+          if (matrix[k][j] == temp2) {
+            temp2_r = k;
+            temp2_c = j;
+          }
+        }
+      }
+
+      //if both alphabet are in same column
+      if (temp1_c == temp2_c) {
+        if (matrix[temp1_r - 1] == (null || undefined)) {
+          decryptedText += matrix[4][temp1_c];
+          decryptedText += matrix[temp2_r - 1][temp1_c];
+        } else if (matrix[temp2_r - 1] == (null || undefined)) {
+          decryptedText += matrix[temp1_r - 1][temp1_c];
+          decryptedText += matrix[4][temp1_c];
+        } else {
+          decryptedText += matrix[temp1_r - 1][temp1_c];
+          decryptedText += matrix[temp2_r - 1][temp1_c];
+        }
+      } //if both alphabet are in same rows
+      else if (temp1_r == temp2_r) {
+        if (matrix[temp1_c - 1] == undefined) {
+          decryptedText += matrix[temp1_r][4];
+          decryptedText += matrix[temp2_r][temp2_c - 1];
+        } else if (matrix[temp2_c - 1] == undefined) {
+          decryptedText += matrix[temp1_r][temp1_c - 1];
+          decryptedText += matrix[temp2_r][4];
+        } else {
+          decryptedText += matrix[temp1_r][temp1_c - 1];
+          decryptedText += matrix[temp2_r][temp2_c - 1];
+        }
+      } //if both alphabet are in diagonal
+      else {
+        // encryptedText += matrix[temp2_c][temp1_r];
+        // encryptedText += matrix[temp1_c][temp2_r];
+        decryptedText += matrix[temp1_r][temp2_c];
+        decryptedText += matrix[temp2_r][temp1_c];
+      }
+      i = i + 2;
+    }
+  }
+
+  removeX_and_InsertSpace();
+}
+
+function removeX_and_InsertSpace() {
+  let temp,
+    newText = "";
+  for (let i = 0; i < decryptedText.length; i++) {
+    if (text.charCodeAt(i) == 32) {
+      newText += String.fromCharCode(32);
+    } else if (
+      decryptedText[i].charCodeAt(0) == 120 &&
+      decryptedText[i - 1] == decryptedText[i + 1]
+    ) {
+      // newText += decryptedText[i-1];
+      // newText += decryptedText[i+1]
+    } else if (decryptedText[i].charCodeAt(0) == 120) {
+      newText += String.fromCharCode(32);
+    } else {
+      newText += decryptedText[i];
+    }
+  }
+  decryptedText = newText;
+  showDecryptedTextInBrowser();
+}
